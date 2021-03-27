@@ -16,7 +16,7 @@ public class ByDiscountComparatorTest {
 
     @ParameterizedTest
     @MethodSource("valuesToCompare")
-    public void testComparator(Discount d1, Discount d2, Integer expected) {
+    public void compare(Discount d1, Discount d2, Integer expected) {
         assertEquals(expected, byDiscountComparator.compare(d1, d2));
     }
 

@@ -19,4 +19,8 @@ public class ItemByWeight implements Item {
     public WeighedProduct getProduct() {
         return product;
     }
+
+    public BigDecimal getWeightInKilos() {
+        return weightInKilos;
+    }
 }
