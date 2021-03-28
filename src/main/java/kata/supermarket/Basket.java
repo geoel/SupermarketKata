@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Basket {
     private final List<Item> items = new ArrayList<>();
-    private final Map<Product, Integer> unitItems = new HashMap<>();
+    private final Map<Product, BigDecimal> unitItems = new HashMap<>();
     private final Map<WeighedProduct, BigDecimal> weighedItems = new HashMap<>();
     private final DiscountService discountService;
 
@@ -22,8 +22,8 @@ public class Basket {
          */
         if (item instanceof ItemByUnit) {
             Product product = ((ItemByUnit) item).getProduct();
-            Integer quantity = unitItems.getOrDefault(product, 0);
-            this.unitItems.put(product, quantity + 1);
+            BigDecimal quantity = unitItems.getOrDefault(product, BigDecimal.ZERO);
+            this.unitItems.put(product, quantity.add(BigDecimal.ONE));
         } else if (item instanceof ItemByWeight) {
             ItemByWeight itemByWeight = (ItemByWeight) item;
             WeighedProduct weighedProduct = itemByWeight.getProduct();
@@ -38,7 +38,7 @@ public class Basket {
         return Collections.unmodifiableList(items);
     }
 
-    Map<Product, Integer> unitItems() {
+    Map<Product, BigDecimal> unitItems() {
         return Collections.unmodifiableMap(unitItems);
     }
 
@@ -51,7 +51,7 @@ public class Basket {
     }
 
     private class TotalCalculator {
-        private final Map<Product, Integer> unitItems;
+        private final Map<Product, BigDecimal> unitItems;
         private final Map<WeighedProduct, BigDecimal> weighedItems;
         private final List<Item> items;
 
@@ -76,7 +76,7 @@ public class Basket {
          *  which provides that functionality.
          */
         private BigDecimal discounts() {
-            return discountService.apply(Basket.this);
+            return discountService.apply(Basket.this, new ByDiscountComparator(), new ByDiscountComparator());
         }
 
         private BigDecimal calculate() {

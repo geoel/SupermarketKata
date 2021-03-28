@@ -23,16 +23,16 @@ public class ByDiscountComparatorTest {
     private static Stream<Arguments> valuesToCompare() {
         return Stream.of(
                 Arguments.of(
-                        new Discount(Discount.DiscountType.SINGLE, new BigDecimal("100.69"), Collections.emptyMap()),
-                        new Discount(Discount.DiscountType.SINGLE, new BigDecimal("100.699"), Collections.emptyMap()),
+                        new Discount(new BigDecimal("100.69"), Collections.emptyMap()),
+                        new Discount(new BigDecimal("100.699"), Collections.emptyMap()),
                         1),
                 Arguments.of(
-                        new Discount(Discount.DiscountType.SINGLE, new BigDecimal("100.699"), Collections.emptyMap()),
-                        new Discount(Discount.DiscountType.SINGLE, new BigDecimal("100.69"), Collections.emptyMap()),
+                        new Discount(new BigDecimal("100.699"), Collections.emptyMap()),
+                        new Discount(new BigDecimal("100.69"), Collections.emptyMap()),
                         -1),
                 Arguments.of(
-                        new Discount(Discount.DiscountType.SINGLE, new BigDecimal("100.69"), Collections.emptyMap()),
-                        new Discount(Discount.DiscountType.SINGLE, new BigDecimal("100.69"), Collections.emptyMap()),
+                        new Discount(new BigDecimal("100.69"), Collections.emptyMap()),
+                        new Discount(new BigDecimal("100.69"), Collections.emptyMap()),
                         0)
 
         );

@@ -14,7 +14,9 @@ import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,14 +36,21 @@ class BasketTest {
     void basketProvidesTotalValue(String description, String expectedTotal, Collection<Item> items) {
         ArgumentCaptor<Basket> argumentCaptor = ArgumentCaptor.forClass(Basket.class);
         BigDecimal discount = new BigDecimal("3.0");
-        when(discountService.apply(argumentCaptor.capture())).thenReturn(discount);
+        ArgumentCaptor<Comparator<Discount<Product>>> pComparatorArgumentCaptor = ArgumentCaptor.forClass(Comparator.class);
+        ArgumentCaptor<Comparator<Discount<WeighedProduct>>> wComparatorArgumentCaptor = ArgumentCaptor.forClass(Comparator.class);
+        when(discountService.apply(argumentCaptor.capture(),
+                pComparatorArgumentCaptor.capture(), wComparatorArgumentCaptor.capture())).thenReturn(discount);
         final Basket basket = new Basket(discountService);
         items.forEach(basket::add);
         BigDecimal total = basket.total();
 
         Basket arg = argumentCaptor.getValue();
+        Comparator<Discount<Product>> pComparator = pComparatorArgumentCaptor.getValue();
+        Comparator<Discount<WeighedProduct>> wComparator = wComparatorArgumentCaptor.getValue();
         assertSame(basket, arg);
         assertEquals(new BigDecimal(expectedTotal).subtract(discount), total);
+        assertTrue(pComparator instanceof  ByDiscountComparator);
+        assertTrue(wComparator instanceof  ByDiscountComparator);
     }
 
 

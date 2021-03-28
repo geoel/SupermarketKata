@@ -1,9 +1,10 @@
 package kata.supermarket;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
+import java.util.Comparator;
 
 public interface DiscountService {
-    BigDecimal apply(Basket basket);
+    BigDecimal apply(Basket basket,
+                     Comparator<Discount<Product>> pDiscountComparator,
+                     Comparator<Discount<WeighedProduct>> wDiscountComparator);
 }

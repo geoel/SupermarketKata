@@ -3,31 +3,20 @@ package kata.supermarket;
 import java.math.BigDecimal;
 import java.util.Map;
 
-public class Discount {
-
-    private final DiscountType discountType;
+public class Discount<T> {
     private final BigDecimal discountAmount;
-    private final Map<Product, Integer> requiredInBasket;
+    private final Map<T, BigDecimal> requiredInBasket;
 
-    enum DiscountType {
-        SINGLE, COMBINED;
-    }
-
-    public Discount(DiscountType discountType, BigDecimal discountAmount, Map<Product, Integer> requiredInBasket) {
-        this.discountType = discountType;
+    public Discount(BigDecimal discountAmount, Map<T, BigDecimal> requiredInBasket) {
         this.discountAmount = discountAmount;
         this.requiredInBasket = requiredInBasket;
-    }
-
-    public DiscountType getDiscountType() {
-        return discountType;
     }
 
     public BigDecimal getDiscountAmount() {
         return discountAmount;
     }
 
-    public Map<Product, Integer> getRequiredInBasket() {
+    public Map<T, BigDecimal> getRequiredInBasket() {
         return requiredInBasket;
     }
 }
