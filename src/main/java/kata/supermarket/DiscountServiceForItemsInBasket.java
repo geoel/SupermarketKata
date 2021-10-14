@@ -11,11 +11,12 @@ public class DiscountServiceForItemsInBasket implements DiscountService {
     }
 
     @Override
-    public BigDecimal apply(Basket basket,
+    public BigDecimal apply(ItemsContainer container,
                             Comparator<Discount<Product>> pDiscountComparator,
                             Comparator<Discount<WeighedProduct>> wDiscountComparator) {
-        Map<Product, BigDecimal> unitItems = new HashMap<>(basket.unitItems());
-        Map<WeighedProduct, BigDecimal> weighedItems = new HashMap<>(basket.weighedItems());
+        Map<Product, BigDecimal> unitItems = new HashMap<>();
+        container.unitItems().entrySet().forEach(x -> unitItems.put(x.getKey(), new BigDecimal(x.getValue())));
+        Map<WeighedProduct, BigDecimal> weighedItems = new HashMap<>(container.weighedItems());
         return applyDiscountForProduct(unitItems, pDiscountComparator).add(
                 applyDiscountForProduct(weighedItems, wDiscountComparator));
     }
@@ -25,12 +26,12 @@ public class DiscountServiceForItemsInBasket implements DiscountService {
         return intemsNeeded.entrySet().stream().allMatch(x -> items.get(x.getKey()).compareTo(x.getValue()) >= 0);
     }
 
-    private <T> BigDecimal applyDiscount(Discount<T> discount, Map<T, BigDecimal> unitItems) {
+    private <T> BigDecimal applyDiscount(Discount<T> discount, Map<T, BigDecimal> items) {
         BigDecimal amount = BigDecimal.ZERO;
 
-        while (isDiscountApplicable(discount, unitItems)) {
+        while (isDiscountApplicable(discount, items)) {
             discount.getRequiredInBasket().entrySet().forEach(x ->
-                    unitItems.put(x.getKey(), unitItems.get(x.getKey()).subtract(x.getValue())));
+                    items.put(x.getKey(), items.get(x.getKey()).subtract(x.getValue())));
             amount = amount.add(discount.getDiscountAmount());
         }
 

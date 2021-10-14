@@ -68,11 +68,11 @@ public class DiscountServieForItemsInBasketTest {
                 new Discount<>(new BigDecimal("5"), candiesTwoKilosSave5)
         ));
 
-        Map<Product, BigDecimal> unitItems = new HashMap<>();
-        unitItems.put(milk, BigDecimal.ONE);
-        unitItems.put(hummus, new BigDecimal("3.0")); // 1.5
-        unitItems.put(bread, new BigDecimal("2.0"));
-        unitItems.put(nuts, new BigDecimal("2.0"));
+        Map<Product, Integer> unitItems = new HashMap<>();
+        unitItems.put(milk, 1);
+        unitItems.put(hummus, 3); // 1.5
+        unitItems.put(bread, 2);
+        unitItems.put(nuts, 2);
         when(basket.unitItems()).thenReturn(unitItems);
 
         Map<WeighedProduct, BigDecimal> weighedItems = new HashMap<>();

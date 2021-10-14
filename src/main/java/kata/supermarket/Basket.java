@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
-public class Basket {
+public class Basket implements ItemsContainer{
     private final List<Item> items = new ArrayList<>();
-    private final Map<Product, BigDecimal> unitItems = new HashMap<>();
+    private final Map<Product, Integer> unitItems = new HashMap<>();
     private final Map<WeighedProduct, BigDecimal> weighedItems = new HashMap<>();
     private final DiscountService discountService;
 
@@ -22,8 +22,8 @@ public class Basket {
          */
         if (item instanceof ItemByUnit) {
             Product product = ((ItemByUnit) item).getProduct();
-            BigDecimal quantity = unitItems.getOrDefault(product, BigDecimal.ZERO);
-            this.unitItems.put(product, quantity.add(BigDecimal.ONE));
+            Integer quantity = unitItems.getOrDefault(product, 0);
+            this.unitItems.put(product, quantity + 1);
         } else if (item instanceof ItemByWeight) {
             ItemByWeight itemByWeight = (ItemByWeight) item;
             WeighedProduct weighedProduct = itemByWeight.getProduct();
@@ -38,11 +38,11 @@ public class Basket {
         return Collections.unmodifiableList(items);
     }
 
-    Map<Product, BigDecimal> unitItems() {
+    public Map<Product, Integer> unitItems() {
         return Collections.unmodifiableMap(unitItems);
     }
 
-    Map<WeighedProduct, BigDecimal> weighedItems() {
+    public Map<WeighedProduct, BigDecimal> weighedItems() {
         return Collections.unmodifiableMap(weighedItems);
     }
 
@@ -51,13 +51,9 @@ public class Basket {
     }
 
     private class TotalCalculator {
-        private final Map<Product, BigDecimal> unitItems;
-        private final Map<WeighedProduct, BigDecimal> weighedItems;
         private final List<Item> items;
 
         TotalCalculator() {
-            this.unitItems = unitItems();
-            this.weighedItems = weighedItems();
             this.items = items();
         }
 
